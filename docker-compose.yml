@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  sniper:
+    build: .
+    container_name: tg-sniper-core
+    volumes:
+      - ./data:/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATA_DIR=/data
+    restart: unless-stopped
+    command: ["python", "main.py"]
+
+  web:
+    build: .
+    container_name: tg-sniper-web
+    volumes:
+      - ./data:/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATA_DIR=/data
+      - ADMIN_USER=admin
+      - ADMIN_PASS=YourStrongPassword123!
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    command: ["uvicorn", "web:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
